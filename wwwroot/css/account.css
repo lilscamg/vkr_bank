@@ -1,0 +1,341 @@
+._input__block {
+    margin-bottom: 10px;
+}
+
+#_2fa__block {
+    display: none;
+}
+
+.phone_input {
+    border-style: none none none solid;
+    padding: 10px;
+    border-width: 5px;
+    width: 100%;
+    border-color: #EE6A59;
+}
+
+._input__text {
+    border-style: none none none solid;
+    padding: 10px;
+    border-width: 5px;
+    width: 100%;
+    border-color: #EE6A59;
+}
+
+._input__tip {
+    font-size: 12px;
+    color: #EE6A59;
+}
+
+.modal_footer {
+    justify-content: center;
+    text-align: center;
+}
+
+._form__send {
+    pointer-events: none;
+    background-color: darkgray;
+    width: 30%;
+    border-radius: 5px;
+    border-color: black;
+    color: white;
+}
+
+._form__send-active {
+    pointer-events: auto;
+    background-color: #EE6A59;
+    cursor: pointer;
+    width: 30%;
+    border-radius: 5px;
+    border-color: #EE6A59;
+    color: white;
+}
+
+._user__info {
+    display: flex;
+    flex-direction: column;
+}
+
+._user__info__title {
+    font-size: 20px;
+    padding: 20px 0;
+    text-align: center;
+}
+
+._user__info__no__user {
+    font-size: 20px;
+    background-color: #D9D9D9;
+    color: black;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+    ._user__info__no__user p {
+        margin: 0px;
+        text-align: center;
+    }
+
+._user__info__form {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10vw;
+    padding-bottom: 10px;
+}
+
+._user__info__form__block {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+._user__info__form__block__col {
+    display: flex;
+    flex-direction: column
+}
+
+._block__text {
+    border-style: none none none solid;
+    padding: 10px;
+    border-width: 5px;
+    border-color: rgb(238, 106, 89);
+    width: 30vw;
+    margin-right: 20px;
+}
+
+._user__info__form__block > ._block__desc {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+._user__info__form__btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+
+#_user__info__save__btn {
+    width: 100%;
+    margin-right: 10px;
+}
+
+#_user__info__change__btn {
+    width: 100%;
+}
+
+._personal__account {
+    padding: 0 17vw;
+    background-color: #D9D9D9;
+    color: black;
+}
+
+._personal__account__row {
+    display: flex;
+    flex-direction: row;
+}
+
+._personal__account > ._personal__account__row > #_user__info__container > ._user__info > ._user__info__title {
+    text-align: left;
+    border-style: none solid none none;
+    border-width: 1px;
+    border-color: white;
+}
+
+._personal__account > ._personal__account__row > #_user__info__container > ._user__info > ._user__info__form {
+    padding: 0 20px 0 0;
+    border-style: none solid none none;
+    border-width: 1px;
+    border-color: white;
+}
+
+._personal__account__settings {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+}
+
+._personal__account__settings__title {
+    font-size: 20px;
+    padding-top: 20px;
+    text-align: right;
+}
+
+._personal__account__settings__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.setting {
+    margin-left: 20px;
+    margin-top: 10px;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: white;
+    border-width: 1px;
+    padding: 10px;
+}
+
+._setting__title {
+    text-align: right;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+._setting__adjust {
+    display: flex;
+    flex-direction: column;
+}
+
+._setting__option {
+    font-size: 14px;
+}
+
+._setting__form__btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 10px 0 10px 20px;
+}
+
+#_setting__save__btn {
+    width: 100%;
+    margin-right: 10px;
+}
+
+#_setting__change__btn {
+    width: 100%;
+}
+
+._credits__container {
+    padding: 0 17vw;
+    background-color: #D9D9D9;
+    color: black;
+    min-height: 70vh;
+    padding-bottom: 20px;
+}
+
+._credits__title {
+    padding: 20px 0;
+    font-size: 20px;
+}
+
+._credits__list {
+    display: flex;
+    flex-direction: column;
+}
+
+._credits__row {
+    display: flex;
+    flex-direction: row;
+    /*background-color: #3A3F58;*/
+    color: black;
+    cursor: pointer;
+}
+
+._credits__row__block {
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    border-collapse: collapse;
+}
+
+    ._credits__row__block.title {
+        font-weight: 900;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    ._credits__row__block.number {
+        width: 3vw;
+        text-align: center;
+    }
+
+    ._credits__row__block.type {
+        width: 12vw;
+        text-align: center;
+    }
+
+    ._credits__row__block.amount {
+        width: 10vw;
+        text-align: center;
+    }
+
+    ._credits__row__block.term {
+        width: 8vw;
+        text-align: center;
+    }
+
+    ._credits__row__block.percent {
+        width: 8vw;
+        text-align: center;
+    }
+
+    ._credits__row__block.status {
+        width: 20vw;
+        flex-grow: 1;
+    }
+
+._credit {
+    display: flex;
+    flex-direction: column;
+}
+
+._credit__info__row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+._credit__info__row__block {
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    flex-grow: 1;
+    width: 30vw;
+    padding: 5px;
+}
+
+._credit__info__row__block__title {
+    font-weight: 900;
+    width: 15vw;
+    border-style: solid none solid solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 5px;
+}
+
+._credit__info__make__payment {
+    margin-bottom: 10px;
+}
+
+#_credit__make__payment__input {
+    width: 15vw;
+}
+
+._credit__info__payment__schedule__title {
+    font-weight: 900;
+}
+
+._credit__info__payment__schedule__btn__down {
+    cursor: pointer;
+    color: #EE6A59;
+}
+
+._credit__info__payment__schedule__btn__up {
+    cursor: pointer;
+    color: #EE6A59;
+}
+
+_credit__info__payment__schedule__list {
+}
+
+._credit__info__payment__schedule__list td {
+    text-align: center;
+    font-size: 10px;
+    padding: 5px 10px;
+    border-style: solid;
+    border-width: 1px;
+}

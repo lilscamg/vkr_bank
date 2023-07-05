@@ -1,0 +1,135 @@
+﻿@using vkr_bank.Models;
+@using vkr_bank.Helpers;
+@using vkr_bank.Dtos;
+@model vkr_bank.Dtos.UserInfoDto;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    UserInfo userInfo = null;
+    string jwt = null;
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+        userInfo = db.UserInfos.FirstOrDefault(ui => ui.Id == user.Id);
+    }
+}
+
+<div class="_user__info">
+
+    @if (user == null)
+    {
+        <div class="_user__info__no__user">
+            <p><a style="cursor: pointer; color: #EE6A59" data-toggle="modal" data-target="#staticBackdropReg">Зарегистрируйтесь</a>, чтобы оформить заявку на кредит</p>
+            <br>
+            <p>Есть личный кабинет? <a style="cursor: pointer; color: #EE6A59" data-toggle="modal" data-target="#staticBackdropAuth">Войти</a></p>
+        </div>
+    }
+    else
+    {
+        <div class="_user__info__title">Персональная информация</div>
+        <form id="_user__info__form" class="_user__info__form">
+            <div class="_user__info__form__block">
+                <input id="_user__info__id" type="hidden" asp-for="Id" value="@user.Id" />
+                <div class="_user__info__form__block__col">
+                    @if (userInfo == null)
+                    {
+                        <input id="_user__info__sn" asp-for="SecondName" class="_block__text" type="text" placeholder="Фамилия" onKeyUp="if(/[^а-яА-ЯёЁ-]/i.test(this.value)){this.value='';}" />
+                    }
+                    else
+                    {
+                        <input id="_user__info__sn" asp-for="SecondName" class="_block__text" type="text" placeholder="Фамилия" value="@userInfo.SecondName" disabled onKeyUp="if(/[^а-яА-ЯёЁ-]/i.test(this.value)){this.value='';}" />
+                    }
+                    <span id="_tip__sn" class="_input__tip" asp-validation-for="SecondName"></span>
+                </div>
+                <div class="_block__desc">Фамилия</div>
+            </div>
+            <div class="_user__info__form__block">
+                <div class="_user__info__form__block__col">
+                    @if (userInfo == null)
+                    {
+                        <input id="_user__info__fn" asp-for="FirstName" class="_block__text" type="text" placeholder="Имя" onKeyUp="if(/[^а-яА-ЯёЁ-]/i.test(this.value)){this.value='';}" />
+                    }
+                    else
+                    {
+                        <input id="_user__info__fn" asp-for="FirstName" class="_block__text" type="text" placeholder="Имя" value="@userInfo.FirstName" disabled onKeyUp="if(/[^а-яА-ЯёЁ-]/i.test(this.value)){this.value='';}" />
+                    }
+                    <span id="_tip__fn" class="_input__tip" asp-validation-for="FirstName"></span>
+                </div>
+                <div class="_block__desc">Имя</div>
+            </div>
+            <div class="_user__info__form__block">
+                <div class="_user__info__form__block__col">
+                    @if (userInfo == null)
+                    {
+                        <input id="_user__info__tn" class="_block__text" type="text" placeholder="Отчество" onKeyUp="if(/[^а-яА-ЯёЁ-]/i.test(this.value)){this.value='';}" />
+                    }
+                    else
+                    {
+                        <input id="_user__info__tn" class="_block__text" type="text" placeholder="Отчество" value="@userInfo.ThirdName" disabled onKeyUp="if(/[^а-яА-ЯёЁ-]/i.test(this.value)){this.value='';}" />
+                    }
+                    <span id="_tip__tn" class="_input__tip"></span>
+                </div>
+                <div class="_block__desc">Отчество*</div>
+            </div>
+            <div class="_user__info__form__block">
+                <div class="_user__info__form__block__col">
+                    @if (userInfo == null)
+                    {
+                        <input id="_user__info__bt" asp-for="BirthTime" class="_block__text" type="date" placeholder="Дата рождения" min="1900-01-01"/>
+                    }
+                    else
+                    {
+                        <input id="_user__info__bt" asp-for="BirthTime" class="_block__text" type="date" placeholder="Дата рождения" min="1900-01-01" value="@userInfo.BirthTime" disabled />
+                    }
+                    <span class="_input__tip" asp-validation-for="BirthTime"></span>
+                </div>
+                <div class="_block__desc">Дата рождения</div>
+            </div>
+            <div class="_user__info__form__block">
+                <div class="_user__info__form__block__col">
+                    @if (userInfo == null)
+                    {
+                        <input id="_user__info__em" class="_block__text" type="text" placeholder="mail@example.ru" />
+                    }
+                    else
+                    {
+                        <input id="_user__info__em" class="_block__text" type="text" placeholder="mail@example.ru" value="@userInfo.Email" disabled />
+                    }
+                    <span id="_tip__em" class="_input__tip"></span>
+                </div>
+                <div class="_block__desc">Электронная почта*</div>
+            </div>
+            <div class="_user__info__form__block">
+                <div class="_user__info__form__block__col">
+                    @if (userInfo == null)
+                    {
+                        <input id="_user__info__pas" asp-for="Passport" class="_block__text" type="text" placeholder="0000 000000" />
+                    }
+                    else
+                    {
+                        <input id="_user__info__pas" asp-for="Passport" class="_block__text" type="text" placeholder="0000 000000" value="@userInfo.Passport" disabled />
+                    }
+                    <span class="_input__tip" asp-validation-for="Passport"></span>
+                </div>
+                <div class="_block__desc">Паспорт</div>
+            </div>
+            <div class="_user__info__form__btns">
+                @if (userInfo == null)
+                {
+                    <input onclick="SaveUI()" id="_user__info__save__btn" class="_form__send-active" type="button" value="Сохранить">
+                    <input onclick="ChangeUI()" id="_user__info__change__btn" class="_form__send" type="button" value="Изменить" disabled>
+                }
+                else
+                {
+                    <input onclick="SaveUI()" id="_user__info__save__btn" class="_form__send" type="button" value="Сохранить" disabled>
+                    <input onclick="ChangeUI()" id="_user__info__change__btn" class="_form__send-active" type="button" value="Изменить">
+                }
+            </div>
+        </form>
+    }
+</div>

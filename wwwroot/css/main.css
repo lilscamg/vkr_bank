@@ -1,0 +1,387 @@
+
+._name {
+    font-size: 20px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+}
+
+._credit__benefits {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+    ._credit__benefits > ._blocks {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+        ._credit__benefits > ._blocks > ._block {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #D9D9D9;
+            font-style: normal;
+            color: black;
+            border-radius: 5px;
+            padding-top: 20px;
+            padding-left: 20px;
+            flex-basis: 24%;
+            height: 175px;
+            transition: color 0.3s;
+        }
+
+            ._credit__benefits > ._blocks > ._block:hover {
+                color: #EE6A59;
+            }
+
+            ._credit__benefits > ._blocks > ._block > ._image {
+                width: 60px;
+                height: 60px;
+            }
+
+            ._credit__benefits > ._blocks > ._block > ._title {
+                font-weight: 700;
+                font-size: 18px;
+            }
+
+            ._credit__benefits > ._blocks > ._block > ._desc {
+                font-weight: 300;
+                font-size: 15px;
+                margin-bottom: 15px;
+            }
+
+._credit__types {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+    ._credit__types > ._blocks {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+        ._credit__types > ._blocks > ._block {
+            position: relative;
+            color: white;
+            transition: color 1s;
+        }
+
+            ._credit__types > ._blocks > ._block:hover {
+                color: transparent;
+            }
+
+
+            ._credit__types > ._blocks > ._block > ._image {
+                height: 200px;
+                width: 21vw;
+                opacity: 0.5;
+                border-radius: 5px;
+                transition: opacity 1s;
+            }
+
+                ._credit__types > ._blocks > ._block > ._image:hover {
+                    opacity: 1;
+                }
+
+            ._credit__types > ._blocks > ._block > ._text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-style: normal;
+                font-weight: 700;
+                font-size: 25px;
+            }
+
+._credit__requirements {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+    ._credit__requirements > ._blocks {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+        ._credit__requirements > ._blocks > ._block {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            background-color: #D9D9D9;
+            border-radius: 5px;
+            padding-top: 20px;
+            padding-left: 20px;
+            flex-basis: 32%;
+            height: 175px;
+        }
+
+            ._credit__requirements > ._blocks > ._block > ._image {
+                width: 60px;
+                height: 60px;
+            }
+
+            ._credit__requirements > ._blocks > ._block > ._text {
+                color: black;
+                font-size: 18px;
+            }
+
+._credit__apply {
+    display: flex;
+    flex-direction: column;
+    border-style: none solid solid solid;
+    border-color: #D9D9D9;
+    border-width: 1px;
+    border-radius: 5px;
+    margin: 40px 0;
+}
+
+._credit__apply__name {
+    font-size: 20px;
+    padding: 20px;
+    background-color: #D9D9D9;
+    border-radius: 5px 5px 0 0;
+    color: black;
+}
+
+._credit__info {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+}
+
+._credit__info__title {
+    font-size: 22px;
+    padding: 20px 0;
+    text-align: center;
+    border-style: solid none none none;
+    border-color: #D9D9D9;
+    border-width: 1px;
+}
+
+._credit__info__form {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10vw 10px 10vw;
+}
+
+._credit__type {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+._credit__select {
+    border-style: none none none solid;
+    padding: 10px;
+    border-width: 5px;
+    border-color: #EE6A59;
+    margin-top: 5px
+}
+
+._credit__flex__row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+._credit__flex__ranges {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 50%;
+}
+
+._credit__flex__ranges__desc {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+._credit__amount {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+._credit__term {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+._credit__number__input {
+    border-style: none none none solid;
+    padding: 10px;
+    border-width: 5px;
+    border-color: #EE6A59;
+}
+
+._credit__flex__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 20px 0;
+    flex-basis: 45%;
+}
+
+._credit__interest__rate__title {
+    text-align: right;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+._credit__interest__rate__value {
+    text-align: right;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #EE6A59;
+}
+
+._credit__monthly__payment__title {
+    text-align: right;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+._credit__monthly__payment__value {
+    text-align: right;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #EE6A59;
+}
+
+._credit__overpayment__title {
+    text-align: right;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+._credit__payment__type__flex {
+    display: flex;
+    flex-direction: column;
+}
+
+._credit__overpayment__value {
+    text-align: right;
+    font-size: 20px;
+    color: #EE6A59;
+}
+
+._payment__type__options {
+    display: flex;
+    flex-direction: row;
+}
+
+._credit__submit {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+._organization__info {
+    display: flex;
+    flex-direction: column;
+}
+
+._organization__info__title {
+    font-size: 22px;
+    padding: 20px 0;
+    text-align: center;
+    border-style: solid none none none;
+    border-color: #D9D9D9;
+    border-width: 1px;
+}
+
+._organization__info__form {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10vw 10px 10vw;
+}
+
+._organization__choice {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+._organization__name {
+}
+
+#_organization__name__suggestions {
+    color: black;
+    margin-right: 20px;
+}
+
+._organization__name__suggestions__row {
+    background-color: white;
+    cursor: pointer;
+    border-style: none none none solid;
+    padding: 10px;
+    border-width: 5px;
+    border-color: #D9D9D9;
+}
+
+    ._organization__name__suggestions__row:hover {
+        background-color: #D9D9D9;
+        border-color: #F9AC67;
+    }
+
+._organization__choice__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 14px;
+}
+
+._salary {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 30px;
+}
+
+._salary__col {
+    display: flex;
+    flex-direction: column;
+}
+
+._salary__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 14px;
+}
+
+._ndfl {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+._ndfl__title{
+    margin-bottom: 5px;
+}
+
+._organization__info__form__btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+#_organization__save__btn {
+    width: 100%;
+    margin-right: 10px;
+}
+
+#_organization__change__btn {
+    width: 100%;
+}

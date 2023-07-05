@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Личный кабинет";
+}
+
+<div class="_references">
+    <a href="/">Главная</a>
+    <a href="/Credit/Credits">Мои кредиты</a>
+</div>
+<div class="_personal__account">
+    <hr class="_line" />
+    <div class="_personal__account__row">
+        <div id="_user__info__container">@await Html.PartialAsync("../Account/UserInfo.cshtml")</div>
+        <div class="_personal__account__settings">
+            <div class="_personal__account__settings__title">Настройки</div>
+            <form id="_personal__account__settings__form" class="_personal__account__settings__form">
+                @await Html.PartialAsync("../Account/Settings.cshtml")
+            </form>
+        </div>
+    </div>
+</div> 

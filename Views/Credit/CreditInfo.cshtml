@@ -1,0 +1,86 @@
+﻿@using vkr_bank.Models;
+@using vkr_bank.Helpers;
+@using vkr_bank.Dtos;
+@model vkr_bank.Dtos.CreditDto;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    string jwt = null;
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+    }
+}
+
+@if (user != null)
+{
+    <div class="_credit__info">
+        <div class="_credit__info__title">Параметры кредита</div>
+        <form id="__credit__info__form" class="_credit__info__form">
+            <div class="_credit__type">
+                <div class="_credit__row__title">Тип кредита</div>
+                <select id="_credit__select" class="_credit__select">
+                    <option value="1">Потребительский</option>
+                    <option value="2">Ипотека</option>
+                    <option value="3">Автокредит</option>
+                </select>
+            </div>
+            <div class="_credit__flex__row">
+                <div class="_credit__flex__ranges">
+                    <div class="_credit__amount">
+                        <div class="_credit__row__title">Сумма кредита</div>
+                        <input class="_credit__number__input" id="_credit__amount__number" type="number" value="20000" placeholder="Сумма кредита" asp-for="CreditAmount" min="20000" max="10000000">
+                        <input class="_credit__range" id="_credit__amount__range" type="range" min="20000" max="10000000" value="20000" step="1">
+                        <div class="_credit__flex__ranges__desc">
+                            <span>20.000 ₽</span>
+                            <span>10.000.000 ₽</span>
+                        </div>
+                        <span id="_tip__amount" class="_input__tip" asp-validation-for="CreditAmount"></span>
+                    </div>
+                    <div class="_credit__term">
+                        <div class="_credit__row__title">Срок кредита</div>
+                        <input class="_credit__number__input" id="_credit__term__number" type="number" value="12" placeholder="Срок кредита" asp-for="CreditTerm" min="12" max="60">
+                        <input class="_credit__range" id="_credit__term__range" type="range" min="12" max="60" value="12" step="1">
+                        <div class="_credit__flex__ranges__desc">
+                            <span>12 мес.</span>
+                            <span>60 мес.</span>
+                        </div>
+                        <span id="_tip__term" class="_input__tip" asp-validation-for="CreditTerm"></span>
+                    </div>
+                </div>
+                <div class="_credit__flex__info">
+                    <div>
+                        <div class="_credit__interest__rate__title">Процентная ставка:</div>
+                        <div class="_credit__interest__rate__value">14.9 %</div>
+                    </div>
+                    <div>
+                        <div class="_credit__monthly__payment__title">Ежемесячная выплата:</div>
+                        <div class="_credit__monthly__payment__value" id='_monthly__payment'>1 804.22 ₽</div>
+                        <input type="hidden" id="_monthly__payment__form">
+                    </div>
+                    <div>
+                        <div class="_credit__overpayment__title">Переплата:</div>
+                        <div class="_credit__overpayment__value" id='_overpayment'>1 650.64 ₽</div>
+                    </div>
+                </div>
+            </div>
+            <div class="_credit__payment__type__flex">
+                <div class="_credit__payment__type__title">Тип платежа</div>
+                <div class="_payment__type__options">
+                    <div class="_payment__type__option" style="margin-right: 20px;"><input style="margin-right: 10px" onclick="ChangePaymentType(this)" name="_payment__type" type="radio" value="0" checked="checked" />Аннуитетный</div>
+                    <div class="_payment__type__option"><input style="margin-right: 10px" onclick="ChangePaymentType(this)" name="_payment__type" type="radio" value="1" />Дифференцированный</div>
+                    <input id="_payment__type" type="hidden" value="0">
+                </div>
+
+            </div>
+            <div class="_credit__submit">
+                <input id="_credit__submit__btn" class="_form__send-active" type="button" value="Оформить" style="width: 100%">
+            </div>
+        </form>
+    </div>
+}

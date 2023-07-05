@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\vkr_bank.props" />
+</Project>

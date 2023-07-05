@@ -1,0 +1,268 @@
+﻿@using vkr_bank.Helpers;
+@using vkr_bank.Models;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    UserInfo userInfo = null;
+    string jwt = null;
+
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+        userInfo = db.UserInfos.FirstOrDefault(ui => ui.Id == user.Id);
+    }
+
+    ViewBag.Title = "Информация о кредите";
+    Credit credit = ViewBag.Credit;
+}
+@if (user != null)
+{
+    <div class="_references">
+        <a href="/">Главная</a>
+        <a href="/Account/PersonalAccount">Личный кабинет</a>
+        <a href="/Credit/Credits">Кредиты</a>
+    </div>
+
+    <div class="_credits__container">
+        <hr class="_line" />
+        <div class="_credits__title"> Информация о кредите <span style="color: #EE6A59;">ID.@ViewBag.Credit.Id</span></div>
+        <div class="_credit">
+            @*тип кредита*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Тип кредита</div>
+                @if (credit.CreditType == 1)
+                {
+                    <div class="_credit__info__row__block">Потребительский</div>
+                }
+                @if (credit.CreditType == 2)
+                {
+                    <div class="_credit__info__row__block">Ипотека</div>
+                }
+                @if (credit.CreditType == 3)
+                {
+                    <div class="_credit__info__row__block">Автокредит</div>
+                }
+            </div>
+            @*размер*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Сумма кредита</div>
+                <div class="_credit__info__row__block">@credit.CreditAmount ₽</div>
+            </div>
+            @*срок*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Срок кредита</div>
+                <div class="_credit__info__row__block">@credit.CreditTerm месяцев</div>
+            </div>
+            @*ставка*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Процентная ставка</div>
+                @if (credit.CreditType == 1)
+                {
+                    <div class="_credit__info__row__block">14.9 %</div>
+                }
+                @if (credit.CreditType == 2)
+                {
+                    <div class="_credit__info__row__block">9.34 %</div>
+                }
+                @if (credit.CreditType == 3)
+                {
+                    <div class="_credit__info__row__block">5.9 %</div>
+                }
+            </div>
+            @*тип платежей*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Тип платежа</div>
+                @if (!credit.isDifferentiated)
+                {
+                    <div class="_credit__info__row__block">Аннуитетный</div>
+                }
+                else
+                {
+                    <div class="_credit__info__row__block">Дифференцированный</div>
+                }
+            </div>
+            @*дата подачи заявки*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Дата подачи</div>
+                <div class="_credit__info__row__block">@credit.ApplicationDate.AddHours(3).ToString("dd.MM.yyyy HH:mm")</div>
+            </div>
+            @*статус*@
+            <div class="_credit__info__row">
+                <div class="_credit__info__row__block__title">Статус</div>
+                @if (credit.Status == 0)
+                {
+                    <div class="_credit__info__row__block" style="color: darkorange">@credit.StatusMessage</div>
+                }
+                @if (credit.Status >= 1 && credit.Status <= 6)
+                {
+                    <div class="_credit__info__row__block" style="color: darkred">Отклонено (@credit.StatusMessage)</div>
+                }
+                @if (credit.Status == 99)
+                {
+                    <div class="_credit__info__row__block" style="color: green">@credit.StatusMessage</div>
+                }
+                @if (credit.Status == 100)
+                {
+                    <div class="_credit__info__row__block" style="color: dimgrey">@credit.StatusMessage</div>
+                }
+            </div>
+            @*если одобрено*@
+            @if (credit.Status == 99 || credit.Status == 100)
+            {
+                @*дата одобрения заявки*@
+                <div class="_credit__info__row">
+                    <div class="_credit__info__row__block__title">Дата одобрения</div>
+                    <div class="_credit__info__row__block">@credit.ApprovalDate.AddHours(3).ToString("dd.MM.yyyy HH:mm")</div>
+                </div>
+                @*остаток кредита*@
+                <div class="_credit__info__row">
+                    <div class="_credit__info__row__block__title">Остаток суммы</div>
+                    <div class="_credit__info__row__block">@Math.Round(credit.CreditBalance, 2) ₽</div>
+                </div>
+                @*количество оплаченных месяцев*@
+                <div class="_credit__info__row">
+                    <div class="_credit__info__row__block__title">Оплачено месяцев</div>
+                    <div class="_credit__info__row__block">@credit.NumberOfPayments месяцев</div>
+                </div>
+                @*задолженность*@
+                <div class="_credit__info__row">
+                    <div class="_credit__info__row__block__title">Задолженности</div>
+                    @if (credit.isOverdue)
+                    {
+                        @*<div class="_credit__info__row__block" style="color: darkred">@credit.DebtAmount ₽</div>*@
+                        <div class="_credit__info__row__block" style="color: darkred">Есть</div>
+                    }
+                    else
+                    {
+                        <div class="_credit__info__row__block">Нет</div>
+                    }
+                </div>
+                if (credit.Status == 99)
+                {
+                    @*внести платеж*@
+                    <div class="_credit__info__make__payment">
+                        <div class="_credit__info__row__block__title" style="border-style: none">Оплатить</div>
+                        <div class="_credit__info__make__payment__flex">
+                            <input class="_block__text" placeholder="@credit.MonthlyPayment" type="number" step="0.01" id="_credit__make__payment__input">
+                            <input class="_form__send-active" type="button" id="_credit__make__payment__button" value="Внести платеж">
+                            <input id="_credit__id" type="hidden" value="@credit.Id">
+                        </div>
+
+                    </div>
+                }
+                @*график платежей*@
+                <div class="_credit__info__payment__schedule">
+                    <div class="_credit__info__payment__schedule__title">График платежей</div>
+                    <div class="_credit__info__payment__schedule__btn__down">Развернуть</div>
+                    <div class="_credit__info__payment__schedule__btn__up" style="display: none; margin-bottom: 10px;">Свернуть</div>
+                    <table class="_credit__info__payment__schedule__list" style="display: none">
+                        <tr>
+                            <td>№</td>
+                            <td>Дата платежа</td>
+                            <td>Сумма платежа</td>
+                            <td>Основной долг</td>
+                            <td>Проценты</td>
+                            <td>Остаток</td>
+                        </tr>
+                        @{
+                            var _date = credit.ApplicationDate;
+                            var _payment__amount = credit.MonthlyPayment;
+                            var _credit__balance = credit.CreditAmount;
+                            double stavka = 0;
+                            var numberOfPayments = 0;
+
+                            if (credit.CreditType == 1)
+                            {
+                                stavka = 14.9;
+                            }
+                            if (credit.CreditType == 2)
+                            {
+                                stavka = 9.34;
+                            }
+                            if (credit.CreditType == 3)
+                            {
+                                stavka = 5.9;
+                            }
+                        }
+                        @*аннуитетный*@
+                        @if (!credit.isDifferentiated)
+                        {
+                            for (int i = 1; i <= credit.CreditTerm; i++)
+                            {
+                                <tr>
+                                    @*#*@
+                                    @if (i <= credit.NumberOfPayments)
+                                    {
+                                        <td style="color: green; font-weight: 900">@i</td>
+                                    }
+                                    @if (i == credit.NumberOfPayments + 1)
+                                    {
+                                        <td style="color: darkorange; font-weight: 900">@i</td>
+                                    }
+                                    @if (i > credit.NumberOfPayments + 1)
+                                    {
+                                        <td style="font-weight: 900">@i</td>
+                                    }
+                                    @*дата выплаты*@
+                                    <td>@_date.AddMonths(1).ToString("dd.MM.yyyy")</td>
+                                    @*размер платежа*@
+                                    <td>@Math.Round(_payment__amount, 2) ₽</td>
+                                    @*основной долг*@
+                                    @{
+                                        var b = credit.MonthlyPayment - _credit__balance * ((stavka / 12) / 100);
+                                        var percent = _payment__amount - b;
+                                        _credit__balance -= b;
+                                    }
+                                    <td>@Math.Round(b, 2) ₽</td>
+                                    @*проценты*@
+                                    <td>@Math.Round(percent , 2) ₽</td>
+                                    @*остаток долга*@
+                                    <td>@Math.Round(_credit__balance, 2) ₽</td>
+                                </tr>
+                                _date = _date.AddMonths(1);
+                            }
+                        }
+                        @*дифференцированный*@
+                        else
+                        {
+                            for (int i = 1; i <= credit.CreditTerm; i++)
+                            {
+                                var b = credit.CreditAmount / credit.CreditTerm;
+                                var Sn = credit.CreditAmount - (b * numberOfPayments);
+                                var p = Sn * ((stavka / 100) / 12);
+                                _payment__amount = b + p;
+                                _credit__balance = _credit__balance - b;
+                                <tr>
+                                    @if (i <= credit.NumberOfPayments)
+                                    {
+                                        <td style="color: green; font-weight: 900">@i</td>
+                                    }
+                                    @if (i == credit.NumberOfPayments + 1)
+                                    {
+                                        <td style="color: darkorange; font-weight: 900">@i</td>
+                                    }
+                                    @if (i > credit.NumberOfPayments + 1)
+                                    {
+                                        <td style="font-weight: 900">@i</td>
+                                    }
+                                    <td>@_date.AddMonths(1).ToString("dd.MM.yyyy")</td>
+                                    <td>@Math.Round(_payment__amount, 2) ₽</td>
+                                    <td>@Math.Round(b, 2) ₽</td>
+                                    <td>@Math.Round(p, 2) ₽</td>
+                                    <td>@Math.Round(_credit__balance, 2) ₽</td>
+                                </tr>
+                                _date = _date.AddMonths(1);
+                                numberOfPayments++;
+                            }
+                        }
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

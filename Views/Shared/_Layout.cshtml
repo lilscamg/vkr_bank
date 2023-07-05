@@ -1,0 +1,414 @@
+﻿@using vkr_bank.Helpers;
+@using vkr_bank.Models;
+@model vkr_bank.Dtos.UserRegisterDto;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    string jwt = null;
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link href="~/css/layout.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/account.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/img/icon1.ico">
+    <!--Мой скрипты-->
+    <script type="module" src="../js/script.js"></script>
+    <script type="module" src="../js/srp.js"></script>
+    <script type="module" src="../js/encryption.js"></script>
+    <!-- JavaScript and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+    <!--Ajax, jQuery-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+    <!--Для маски телефона-->
+    <script src="https://unpkg.com/imask"></script>
+
+</head>
+<body>
+    <header>
+        <div class="left">
+            <img src="~/img/icon1.png" />
+            <a href="/" class="_app__name"><span style="color: black">СКАМ</span><span style="color: white">КомБанк</span></a>
+        </div>
+        @if (user is not null)
+        {
+            <div class="right">@user.PhoneNumber</div>
+        }
+        else
+        {
+            <div class="right">вход не выполнен</div>
+        }
+    </header>
+    <div class="_render__body">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <div>© 2004-2023, ПАО «СКАМКомБанк» Все права защищены.</div>
+        <div>Генеральная лицензия Банка России №963 от 5 декабря 2014 г.</div>
+
+    </footer>
+
+    @*Bootstrap*@
+    @await Html.PartialAsync("../Account/Registration")
+    @await Html.PartialAsync("../Account/Authorization")
+
+</body>
+</html>
+
+<script>
+    // получить ключ
+    async function deriveKey(password, salt) {
+        var utf8Encoder = new TextEncoder('utf-8');
+        const buffer = utf8Encoder.encode(password);
+        const key = await window.crypto.subtle.importKey(
+            'raw',
+            buffer,
+            { name: 'PBKDF2' },
+            false,
+            ['deriveKey'],
+        );
+
+        var iterations = 25000
+
+        const privateKey = window.crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                hash: { name: 'SHA-256' },
+                iterations,
+                salt,
+            },
+            key,
+            {
+                name: 'AES-GCM',
+                length: 256,
+            },
+            false,
+            ['encrypt', 'decrypt'],
+        );
+
+        return privateKey;
+    }
+    // функции перевода base64 в массив байтов и обратно
+    const buff_to_base64 = (buff) => btoa(String.fromCharCode.apply(null, buff));
+    const base64_to_buf = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(null));
+    // шифрование
+    async function encrypt(key, data, iv, salt) {
+        const buffer = new TextEncoder().encode(data);
+
+        const privatekey = await deriveKey(key, salt);
+        const encrypted = await window.crypto.subtle.encrypt(
+            {
+                name: 'AES-GCM',
+                iv,
+                tagLength: 128,
+            },
+            privatekey,
+            buffer,
+        );
+
+        const bytes = new Uint8Array(encrypted);
+        let buff = new Uint8Array(salt.byteLength + iv.byteLength + encrypted.byteLength);
+        buff.set(salt, 0);
+        buff.set(iv, salt.byteLength);
+        buff.set(bytes, salt.byteLength + iv.byteLength);
+
+        const base64Buff = buff_to_base64(buff);
+        return base64Buff;
+    }
+    // дешифрование
+    async function decrypt(key, data) {
+        const d = base64_to_buf(data);
+        const salt = d.slice(0, 16); // Fix 1: consider salt
+        const iv = d.slice(16, 16 + 12)
+        const ec = d.slice(16 + 12);
+
+        const decrypted = await window.crypto.subtle.decrypt(
+            {
+                name: 'AES-GCM',
+                iv,
+                tagLength: 128,
+            },
+            await deriveKey(key, salt),
+            ec
+        );
+
+        return new TextDecoder().decode(new Uint8Array(decrypted));
+    }
+    // функции отправки данных на сервер
+    function SaveUI() {
+        // получение объекта
+        var user_info = {
+            Id: parseInt(document.getElementById('_user__info__id').value),
+            FirstName: document.getElementById('_user__info__fn').value,
+            SecondName: document.getElementById('_user__info__sn').value,
+            ThirdName: document.getElementById('_user__info__tn').value,
+            BirthTime: document.getElementById('_user__info__bt').value,
+            Email: document.getElementById('_user__info__em').value,
+            Passport: document.getElementById('_user__info__pas').value
+        }
+        // валидация персональной информации
+        if (user_info.SecondName == "") {
+            document.getElementById('_tip__sn').innerHTML = "Введите фамилию"
+            return
+        }
+        else {
+            document.getElementById('_tip__sn').innerHTML = ""
+        }
+        if (user_info.FirstName == "") {
+            document.getElementById('_tip__fn').innerHTML = "Введите имя"
+            return
+        }
+        else {
+            document.getElementById('_tip__fn').innerHTML = ""
+        }
+        if (user_info.Email != "") {
+            if (/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user_info.Email)) {
+                document.getElementById('_tip__em').innerHTML = ""
+            }
+            else {
+                document.getElementById('_tip__em').innerHTML = "Почта введена некорректно"
+                return
+            }
+        }
+        // шифрование данных
+        var K_c = window.localStorage.getItem("K_c")
+        var salt = window.crypto.getRandomValues(new Uint8Array(16));
+        var iv = window.crypto.getRandomValues(new Uint8Array(12));
+        console.log(`Ключ шифрования клиента:\n${K_c}`)
+        console.log(`Исходный вид данных на клиенте:\n${JSON.stringify(user_info)}`)
+        encrypt(K_c, JSON.stringify(user_info), iv, salt).then((user_info_enc) => {
+            console.log(`Зашифрованные данные на клиенте:\n${user_info_enc}`)
+            // отправка формы
+            $.ajax({
+                method: "POST",
+                url: "/Account/UpdateUserInfo",
+                data: {
+                    ui_enc: user_info_enc
+                },
+                success: function () {
+                    alert('Персональные данные успешно изменены.')
+                    $("#_user__info__container").load("/Account/LoadUserInfo")
+                }
+            })
+        })
+    }
+    function ChangeUI() {
+        // открытие элементов формы
+        let user_info_form = document.getElementById('_user__info__form')
+        var elements = user_info_form.elements
+        for (var i = 0, len = elements.length; i < len; ++i) {
+            elements[i].disabled = false;
+        }
+        document.getElementById('_user__info__pas').disabled = true
+        // смена стилей
+        document.getElementById('_user__info__change__btn').disabled = true;
+        document.getElementById('_user__info__change__btn').classList.add("_form__send")
+        document.getElementById('_user__info__change__btn').classList.remove("_form__send-active")
+        document.getElementById('_user__info__save__btn').disabled = false
+        document.getElementById('_user__info__save__btn').classList.add("_form__send-active")
+        document.getElementById('_user__info__save__btn').classList.remove("_form__send")
+    }
+    function SaveOrg() {
+        // получение объекта
+        var organization_info = {
+            UserId: document.getElementById('_user__info__id').value,
+            OrganizationName: document.getElementById('_organization__name__input').value,
+            Salary: document.getElementById('_salary__input').value
+        }
+        console.log(organization_info)
+        // валидация информации о организации
+        if (organization_info.OrganizationName == "") {
+            document.getElementById('_tip__on').innerHTML = "Введите название организации"
+            return
+        }
+        else {
+            document.getElementById('_tip__on').innerHTML = ""
+        }
+        if (organization_info.Salary == "") {
+            document.getElementById('_tip__sal').innerHTML = "Введите размер своей з/п"
+            return
+        }
+        else {
+            document.getElementById('_tip__sal').innerHTML = ""
+        }
+        // шифрование данных
+        var K_c = window.localStorage.getItem("K_c")
+        var salt = window.crypto.getRandomValues(new Uint8Array(16));
+        var iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+        encrypt(K_c, JSON.stringify(organization_info), iv, salt).then((organization_info_enc) => {
+            // отправка формы
+            $.ajax({
+                method: "POST",
+                url: "/Credit/UpdateOrganizationInfo",
+                data: {
+                    oi_enc: organization_info_enc
+                },
+                success: function (response) {
+                    console.log(response)
+                    if (response == 1) {
+                        alert('Неверная организация')
+                        return
+                    }
+                    if (response == 2) {
+                        alert('Некорректная заработная плата')
+                        return
+                    }
+                    else {
+                        alert('Данные о месте работы успешно изменены.')
+                        $("#_organization__info__container").load("/Credit/LoadOrganizationInfo")
+                    }
+                }
+            })
+        })
+    }
+    function ChangeOrg() {
+        // открытие элементов формы
+        let organization_info_form = document.getElementById('_organization__info__form')
+        var elements = organization_info_form.elements
+        for (var i = 0, len = elements.length; i < len; ++i) {
+            elements[i].disabled = false;
+        }
+        // смена стилей
+        document.getElementById('_organization__change__btn').disabled = true;
+        document.getElementById('_organization__change__btn').classList.add("_form__send")
+        document.getElementById('_organization__change__btn').classList.remove("_form__send-active")
+        document.getElementById('_organization__save__btn').disabled = false
+        document.getElementById('_organization__save__btn').classList.add("_form__send-active")
+        document.getElementById('_organization__save__btn').classList.remove("_form__send")
+    }
+    function SaveSet() {
+        // 2fa
+        let _2fa
+        const radioButtons = document.querySelectorAll('input[name="_2fa"]');
+        for (const radioButton of radioButtons) {
+            if (radioButton.checked) {
+                _2fa = radioButton.value
+            }
+        }
+        // еще че то
+
+        // отправка формы
+        $.ajax({
+            method: "POST",
+            url: "/Account/UpdateSettings",
+            data: {
+                id: document.getElementById('_user__info__id').value,
+                new_2fa: _2fa
+            },
+            success: function (response) {
+                if (response == 1 && _2fa == 1) {
+                    alert("Ошибка. Не указана почта")
+                    return
+                }
+                if (response == 2) {
+                    alert("Ошибка. Функция недоступна")
+                    return
+                }
+                alert("Настройки изменены")
+                $("._personal__account__settings__form").load("/Account/LoadSettings")
+            }
+        })
+    }
+    function ChangeSet() {
+        // открытие элементов формы
+        let settings_form = document.getElementById('_personal__account__settings__form')
+        var elements = settings_form.elements
+        for (var i = 0, len = elements.length; i < len; ++i) {
+            elements[i].disabled = false;
+        }
+        // смена стилей
+        document.getElementById('_setting__change__btn').disabled = true;
+        document.getElementById('_setting__change__btn').classList.add("_form__send")
+        document.getElementById('_setting__change__btn').classList.remove("_form__send-active")
+        document.getElementById('_setting__save__btn').disabled = false
+        document.getElementById('_setting__save__btn').classList.add("_form__send-active")
+        document.getElementById('_setting__save__btn').classList.remove("_form__send")
+    }
+    function ChangePaymentType(radioBtn) {
+        // элементы
+        let credit_monthly_value = document.getElementById('_monthly__payment')
+        let credit_amount_number = document.getElementById('_credit__amount__number')
+        let credit_term_number = document.getElementById('_credit__term__number')
+        let credit_type = document.getElementById('_credit__select')
+        let title = document.querySelector("._credit__monthly__payment__title")
+        // фиксированные проценты у ставок
+        const potreb = 14.9
+        const ipoteka = 9.34
+        const auto = 5.9
+        let stavka
+        // переменные
+        let amount = parseInt(credit_amount_number.value)
+        let term = parseInt(credit_term_number.value)
+        // определение ставки
+        if (credit_type.value == 1)
+            stavka = potreb
+        if (credit_type.value == 2)
+            stavka = ipoteka
+        if (credit_type.value == 3)
+            stavka = auto
+
+        if (radioBtn.value == 0) {
+            // расчет платежа
+            let credit_amount_payment = Math.round((amount * (stavka / (100 * 12)) / (1 - Math.pow(1 + (stavka / (100 * 12)), (-1) * term))) * 100) / 100
+            credit_monthly_value.innerHTML = new Intl.NumberFormat('ru-RU').format(credit_amount_payment) + " ₽"
+            document.getElementById('_monthly__payment__form').value = credit_amount_payment
+            title.innerHTML = "Ежемесячная выплата:"
+            document.getElementById('_payment__type').value = 0;
+            // переплата
+            let overpayment = credit_amount_payment * term - amount
+            overpayment = Math.round(overpayment * 100) / 100
+            document.getElementById('_overpayment').innerHTML = new Intl.NumberFormat('ru-RU').format(overpayment) + " ₽"
+        }
+        else {
+            // расчет платежа
+            var b = amount / term
+            var Sn = amount - (b * 0)
+            var p = Sn * ((stavka / 100) / 12)
+            let credit_amount_payment = Math.round((b + p) * 100) / 100
+            credit_monthly_value.innerHTML = new Intl.NumberFormat('ru-RU').format(credit_amount_payment) + " ₽"
+            document.getElementById('_monthly__payment__form').value = credit_amount_payment
+            title.innerHTML = "Выплата в первый месяц:"
+            document.getElementById('_payment__type').value = 1;
+            // переплата
+            let overpayment = 0
+            let numberOfPayments = 0
+
+            for (var i = 1; i <= term; i++) {
+                let b = amount / term;
+                let Sn = amount - (b * numberOfPayments);
+                let p = Sn * ((stavka / 100) / 12);
+                overpayment += (b + p);
+                numberOfPayments += 1
+            }
+            overpayment = Math.round((overpayment - amount) * 100) / 100
+            document.getElementById('_overpayment').innerHTML = new Intl.NumberFormat('ru-RU').format(overpayment) + " ₽"
+        }
+
+    }
+    function OrganizationChoice(row) {
+        var organization_input = document.getElementById('_organization__name__input')
+        var organizations_suggestions = document.getElementById('_organization__name__suggestions')
+        organization_input.value = row.innerHTML
+        organizations_suggestions.innerHTML = ""
+    }
+</script>

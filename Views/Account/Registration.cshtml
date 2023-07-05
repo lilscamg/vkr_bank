@@ -1,0 +1,47 @@
+﻿@model vkr_bank.Dtos.UserRegisterDto;
+
+<form method="post" asp-action="SRP_Reg" asp-controller="Account">
+    <div class="modal fade" id="staticBackdropReg"
+         data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div style="background-color: #EE6A59" class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Регистрация пользователя</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div style="background-color: #D9D9D9; color: black; padding-bottom: 0px" class="modal-body">
+                    @*номер телефона*@
+                    <div class="_input__block">
+                        <label asp-for="PhoneNumber">Номер телефона</label><br />
+                        <input class="phone_input" placeholder="+7 (000) 000-00-00" type="text" asp-for="PhoneNumber" />
+                        <br />
+                        <span class="_input__tip" asp-validation-for="PhoneNumber"></span>
+                    </div>
+                    @*пароль*@
+                    <div class="_input__block">
+                        <label asp-for="Password">Пароль</label><br />
+                        <input class="_input__text" id="_reg__password__input" type="password" asp-for="Password" maxlength="20" />
+                        <br />
+                        <span class="_input__tip" asp-validation-for="Password"></span>
+                    </div>
+                    @*повторить пароль*@
+                    <div class="_input__block">
+                        <label asp-for="PasswordRepeat">Повторите пароль</label><br />
+                        <input class="_input__text" type="password" asp-for="PasswordRepeat" maxlength="20" />
+                        <br />
+                        <span class="_input__tip" asp-validation-for="PasswordRepeat"></span>
+                    </div>
+                    @*скрытые поля для srp*@
+                    <input id="_srp__salt" type="hidden" asp-for="Salt" value=""/>
+                    <input id="_srp__verifier" type="hidden" asp-for="Verifier" value=""/>
+                </div>
+                <div style="background-color: #D9D9D9; justify-content: center" class="modal-footer">
+                    <input class="_form__send" type="submit" value="Регистрация" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

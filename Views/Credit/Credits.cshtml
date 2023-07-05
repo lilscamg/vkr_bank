@@ -1,0 +1,123 @@
+﻿@using vkr_bank.Helpers;
+@using vkr_bank.Models;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    var _creditService = new CreditService();
+    UserSRP user = null;
+    UserInfo userInfo = null;
+    string jwt = null;
+
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+        userInfo = db.UserInfos.FirstOrDefault(ui => ui.Id == user.Id);
+        // проверка просроченности кредитов
+        _creditService.CheckDebts(user.Id);
+        // одобрение кредитов
+        _creditService.CreditApproval(user.Id);
+    }
+    ViewBag.Title = "Кредиты";
+}
+
+@if (user != null)
+{
+
+    <div class="_references">
+        <a href="/">Главная</a>
+        <a href="/Account/PersonalAccount">Личный кабинет</a>
+    </div>
+
+    <div class="_credits__container">
+        <hr class="_line" />
+        @if (userInfo != null)
+        {
+            <div class="_credits__title"> Ваши кредиты, <span style="color: #EE6A59;">@userInfo.FirstName</span></div>
+        }
+        else
+        {
+            <div class="_credits__title"> Ваши кредиты</div>
+        }
+
+        <div class="_credits__list">
+
+            @if (ViewBag.UserСredits.Count == 0)
+            {
+                <text>У вас еще нет кредитов</text>
+            }
+            else
+            {
+                int i = 1;
+                <div class="_credits__row">
+                    <div class="_credits__row__block number title">№</div>
+                    <div class="_credits__row__block type title">Тип</div>
+                    <div class="_credits__row__block amount title">Сумма</div>
+                    <div class="_credits__row__block term title">Срок</div>
+                    <div class="_credits__row__block percent title">Дата</div>
+                    <div class="_credits__row__block status title">Статус</div>
+                </div>
+                foreach (var credit in ViewBag.UserСredits)
+                {
+
+                    <a class="_credits__row" href="/Credit/Credit?id=@credit.Id">
+                        @*номер*@
+                        <div class="_credits__row__block number">@i</div>
+                        @*тип кредита*@
+                        @if (credit.CreditType == 1)
+                        {
+                            <div class="_credits__row__block type">Потребительский</div>
+                        }
+                        @if (credit.CreditType == 2)
+                        {
+                            <div class="_credits__row__block type">Ипотека</div>
+                        }
+                        @if (credit.CreditType == 3)
+                        {
+                            <div class="_credits__row__block type">Автокредит</div>
+                        }
+                        @*сумма*@
+                        <div class="_credits__row__block amount">@credit.CreditAmount ₽</div>
+                        @*срок*@
+                        <div class="_credits__row__block term">@credit.CreditTerm мес.</div>
+                        @*процент*@
+                        @*@if (credit.CreditType == 1)
+                        {
+                            <div class="_credits__row__block percent">14.9 %</div>
+                        }
+                        @if (credit.CreditType == 2)
+                        {
+                            <div class="_credits__row__block percent">9.34 %</div>
+                        }
+                        @if (credit.CreditType == 3)
+                        {
+                            <div class="_credits__row__block percent">5.9 %</div>
+                        }*@
+                        <div class="_credits__row__block term">@credit.ApplicationDate.ToString("dd.MM.yyyy")</div>
+                        @*статус*@
+                        @if (credit.Status == 0)
+                        {
+                            <div class="_credits__row__block status" style="color: darkorange">@credit.StatusMessage</div>
+                        }
+                        @if (credit.Status >= 1 && credit.Status <= 6)
+                        {
+                            <div class="_credits__row__block status" style="color: darkred">Отклонено (@credit.StatusMessage)</div>
+                        }
+                        @if (credit.Status == 99)
+                        {
+                            <div class="_credits__row__block status" style="color: green">@credit.StatusMessage</div>
+                        }
+                        @if (credit.Status == 100)
+                        {
+                            <div class="_credits__row__block status" style="color: dimgrey">@credit.StatusMessage</div>
+                        }
+                    </a>
+                    i++;
+                }
+            }
+        </div>
+    </div>
+}

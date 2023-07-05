@@ -1,0 +1,117 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\css\\account.css",
+      "PackagePath": "staticwebassets\\css\\account.css"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\css\\layout.css",
+      "PackagePath": "staticwebassets\\css\\layout.css"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\css\\main.css",
+      "PackagePath": "staticwebassets\\css\\main.css"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\files\\car_template.docx",
+      "PackagePath": "staticwebassets\\files\\car_template.docx"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\files\\family_template.docx",
+      "PackagePath": "staticwebassets\\files\\family_template.docx"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\files\\ndfl_template.docx",
+      "PackagePath": "staticwebassets\\files\\ndfl_template.docx"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\1868089.png",
+      "PackagePath": "staticwebassets\\img\\1868089.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\20.png",
+      "PackagePath": "staticwebassets\\img\\20.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\6041041.png",
+      "PackagePath": "staticwebassets\\img\\6041041.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\6850700.png",
+      "PackagePath": "staticwebassets\\img\\6850700.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\car.jpg",
+      "PackagePath": "staticwebassets\\img\\car.jpg"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\dohod.png",
+      "PackagePath": "staticwebassets\\img\\dohod.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\icon.png",
+      "PackagePath": "staticwebassets\\img\\icon.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\icon1.ico",
+      "PackagePath": "staticwebassets\\img\\icon1.ico"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\icon1.png",
+      "PackagePath": "staticwebassets\\img\\icon1.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\ipoteka.jpg",
+      "PackagePath": "staticwebassets\\img\\ipoteka.jpg"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\men.png",
+      "PackagePath": "staticwebassets\\img\\men.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\micro.png",
+      "PackagePath": "staticwebassets\\img\\micro.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\passport.png",
+      "PackagePath": "staticwebassets\\img\\passport.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\potreb.png",
+      "PackagePath": "staticwebassets\\img\\potreb.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\img\\stavka.png",
+      "PackagePath": "staticwebassets\\img\\stavka.png"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\js\\encryption.js",
+      "PackagePath": "staticwebassets\\js\\encryption.js"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\js\\script.js",
+      "PackagePath": "staticwebassets\\js\\script.js"
+    },
+    {
+      "Id": "C:\\Users\\indam\\source\\repos\\vkr_bank\\vkr_bank\\wwwroot\\js\\srp.js",
+      "PackagePath": "staticwebassets\\js\\srp.js"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.vkr_bank.props",
+      "PackagePath": "build\\vkr_bank.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.vkr_bank.props",
+      "PackagePath": "buildMultiTargeting\\vkr_bank.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.vkr_bank.props",
+      "PackagePath": "buildTransitive\\vkr_bank.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.vkr_bank.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

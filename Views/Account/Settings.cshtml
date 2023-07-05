@@ -1,0 +1,62 @@
+﻿@using vkr_bank.Helpers;
+@using vkr_bank.Models;
+@model vkr_bank.Dtos.UserRegisterDto;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    string jwt = null;
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+    }
+}
+
+<div class="setting">
+    <div class="_setting__title">Двухфакторная аутентификация</div>
+    <div class="_setting__adjust">
+        @if (user._2fa == 0)
+        {
+            <div class="_setting__option"><input type="radio" name="_2fa" value="0" style="margin-right: 10px" checked="checked" disabled />Выключить</div>
+            <div class="_setting__option"><input type="radio" name="_2fa" value="1" style="margin-right: 10px" disabled />По почте</div>
+            @*<div class="_setting__option"><input type="radio" name="_2fa" value="2" style="margin-right: 10px" disabled />По телефону</div>*@
+        }
+        @if (user._2fa == 1)
+        {
+            <div class="_setting__option"><input type="radio" name="_2fa" value="0" style="margin-right: 10px" disabled />Выключить</div>
+            <div class="_setting__option"><input type="radio" name="_2fa" value="1" style="margin-right: 10px" checked="checked" disabled />По почте</div>
+            @*<div class="_setting__option"><input type="radio" name="_2fa" value="2" style="margin-right: 10px" disabled />По телефону</div>*@
+        }
+    </div>
+</div>
+<div class="_setting__form__btns">
+    <input onclick="SaveSet()" id="_setting__save__btn" class="_form__send" type="button" value="Сохранить" disabled>
+    <input onclick="ChangeSet()" id="_setting__change__btn" class="_form__send-active" type="button" value="Изменить">
+</div>
+<div class="setting">
+    <div class="_setting__title">Смена пароля</div>
+    <div class="_setting__adjust">
+        @*старый пароль*@
+        <div class="_input__block">
+            <label asp-for="Password">Старый пароль</label><br />
+            <input class="_input__text" type="password"/>
+        </div>
+        @*новый пароль*@
+        <div class="_input__block">
+            <label asp-for="PasswordRepeat">Новый пароль</label><br />
+            <input class="_input__text" type="password"/>
+        </div>
+        @*повторить новый пароль*@
+        <div class="_input__block">
+            <label asp-for="PasswordRepeat">Повторите новый пароль</label><br />
+            <input class="_input__text" type="password"/>
+        </div>
+    </div>
+</div>
+<div class="_setting__form__btns">
+    <input class="_form__send" type="submit" value="Сменить" />
+</div>

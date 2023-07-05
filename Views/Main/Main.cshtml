@@ -1,0 +1,82 @@
+﻿@using vkr_bank.Models;
+@using vkr_bank.Helpers;
+
+@{
+    ViewBag.Title = "СкамКомБанк";
+}
+
+@await Html.PartialAsync("../Main/PostHeader.cshtml")
+<div class="_main__content">
+    <div class="_credit__benefits">
+        <div class="_name">Преимущества кредитов</div>
+        <div class="_blocks">
+            <div class="_block">
+                <img src="~/img/stavka.png" class="_image" />
+                <div class="_title">Ставка</div>
+                <div class="_desc">от 5.9% годовых</div>
+            </div>
+            <div class="_block">
+                <img src="~/img/1868089.png" class="_image" />
+                <div class="_title">Сумма кредита</div>
+                <div class="_desc">до 10.000.000 Р</div>
+            </div>
+            <div class="_block">
+                <img src="~/img/6850700.png" class="_image" />
+                <div class="_title">Срок кредита</div>
+                <div class="_desc">до 5 лет</div>
+            </div>
+            <div class="_block">
+                <img src="~/img/6041041.png" class="_image" />
+                <div class="_title">Быстрое решение</div>
+                <div class="_desc">заявка онлайн</div>
+            </div>
+        </div>
+    </div>
+    <hr class="_line" />
+    <div class="_credit__types">
+        <div class="_name">Виды кредитования</div>
+        <div class="_blocks">
+            <div class="_block">
+                <img class="_image" src="~/img/potreb.png" />
+                <div class="_text">Потребительский</div>
+            </div>
+            <div class="_block">
+                <img class="_image" src="~/img/ipoteka.jpg" />
+                <div class="_text">Ипотека</div>
+            </div>
+            <div class="_block">
+                <img class="_image" src="~/img/car.jpg" />
+                <div class="_text">Автокредит</div>
+            </div>
+        </div>
+    </div>
+    <hr class="_line" />
+    <div class="_credit__requirements">
+        <div class="_name">Требования к заемщику</div>
+        <div class="_blocks">
+            <div class="_block">
+                <img class="_image" src="~/img/passport.png" />
+                <div class="_text">Паспорт гражданина РФ</div>
+            </div>
+            <div class="_block">
+                <img class="_image" src="~/img/20.png" />
+                <div class="_text">Возраст от 20 лет</div>
+            </div>
+            <div class="_block">
+                <img class="_image" src="~/img/dohod.png" />
+                <div class="_text">Постоянный источник дохода</div>
+            </div>
+        </div>
+    </div>
+    <hr class="_line" />
+    <div class="_credit__apply" id="_credit__apply">
+        <div class="_credit__apply__name">Подача заявки на кредит</div>
+        <div id="_user__info__container">
+            @await Html.PartialAsync("../Account/UserInfo.cshtml")
+        </div>
+        <div id="_organization__info__container">
+            @await Html.PartialAsync("../Credit/OrganizationInfo.cshtml")
+        </div>
+        @await Html.PartialAsync("../Credit/CreditInfo.cshtml")
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@using vkr_bank.Helpers;
+@using vkr_bank.Models;
+@model vkr_bank.Dtos.UserRegisterDto;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    string jwt = null;
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+    }
+}
+
+<div class="_references">
+    @if (user is not null)
+    {
+        <a id="_get__private__data" href="/Account/PersonalAccount">Личный кабинет</a>
+        <a href="/Account/Logout">Выйти</a>
+    }
+    else
+    {
+        <a href="" data-toggle="modal" data-target="#staticBackdropReg">Регистрация</a>
+        <a href="" data-toggle="modal" data-target="#staticBackdropAuth">Вход</a>
+    }
+</div>
+<div class="_post__header">
+    <hr class="_line" />
+    <div class="_under__references">
+        <div class="_left">
+            <div class="_credit__text">УДОБНОЕ ОФОРМЛЕНИЕ КРЕДИТА</div>
+            <a id="_credit__button" class="_credit__button">Оставить заявку сейчас</a>
+        </div>
+        <img class="_right" src="~/img/men.png" />
+    </div>
+</div>

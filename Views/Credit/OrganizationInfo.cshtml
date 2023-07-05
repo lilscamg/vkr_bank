@@ -1,0 +1,85 @@
+﻿@using vkr_bank.Models;
+@using vkr_bank.Helpers;
+@using vkr_bank.Dtos;
+@model vkr_bank.Dtos.CreditDto;
+
+@{
+    var db = new ApplicationContext();
+    var _jwtService = new JwtService();
+    var _getUserService = new GetUserService();
+    UserSRP user = null;
+    UserInfo userInfo = null;
+    Organization organization = null;
+    OrganizationInfo organizationInfo= null;
+    string jwt = null;
+    // проверка пользователя
+    if (Context.Request.Cookies.ContainsKey("jwt"))
+    {
+        jwt = Context.Request.Cookies["jwt"];
+        user = _getUserService.GetUser(jwt);
+        organizationInfo = db.OrganizationInfos.FirstOrDefault(o => o.UserId == user.Id);
+    }
+}
+<div class="_organization__info">
+    @if (user != null)
+    {
+        <div class="_organization__info__title">Сведения о трудоустройстве</div>
+        <form id="_organization__info__form" class="_organization__info__form">
+            <div class="_organization__choice">
+                <div class="_organization__name">
+                    @if (organizationInfo == null)
+                    {
+                        <input id="_organization__name__input" class="_block__text" type="text" autocomplete="off"/>
+                    }
+                    else
+                    {
+                        <input id="_organization__name__input" class="_block__text" type="text" value="@db.Organizations.FirstOrDefault(o => o.Id == organizationInfo.OrganizationId).Name" disabled />
+                    }
+                    <div id="_organization__name__suggestions">
+                    </div>
+                    <span id="_tip__on" class="_input__tip"></span>
+                </div>
+                <div class="_organization__choice__title"><div>Организация</div></div>
+            </div>
+
+            <div class="_salary">
+                <div class="_salary__col">
+                    @if (organizationInfo == null)
+                    {
+                        <input id="_salary__input" type="number" class="_block__text" min="12000" max="5000000"/>
+                    }
+                    else
+                    {
+                        <input id="_salary__input" type="number" class="_block__text" value="@organizationInfo.Salary" disabled />
+                    }
+                    <span id="_tip__sal" class="_input__tip"></span>
+                </div>
+
+                <div class="_salary__title"><div>Зар. плата (в руб.)</div></div>
+            </div>
+
+           @* <div class="_ndfl">
+                <div class="_ndfl__title">
+                    Прикрепите НДФЛ-2 в формате .docx для подтверждения данных
+                </div>
+                <div>
+                    <input type="file" accept=".docx">
+                </div>
+                
+            </div>*@
+
+            <div class="_organization__info__form__btns">
+                @if (organizationInfo == null)
+                {
+                    <input onclick="SaveOrg()" id="_organization__save__btn" class="_form__send-active" type="button" value="Сохранить">
+                    <input onclick="ChangeOrg()" id="_organization__change__btn" class="_form__send" type="button" value="Изменить" disabled>
+                }
+                else
+                {
+                    <input onclick="SaveOrg()" id="_organization__save__btn" class="_form__send" type="button" value="Сохранить" disabled>
+                    <input onclick="ChangeOrg()" id="_organization__change__btn" class="_form__send-active" type="button" value="Изменить">
+                }
+            </div>
+        </form>
+    }
+</div>
